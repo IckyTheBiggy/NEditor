@@ -52,13 +52,13 @@ void HandleInput(Cursor& cursor)
     if (IsKeyPressed(KEY_UP))
     {
         cursor.MoveUp();
-        cursor.SetX(TextBuffer[cursor.GetY()].size());
+        cursor.SetX(std::min(cursor.GetX(), (int)TextBuffer[cursor.GetY()].size()));
     }
 
     if (IsKeyPressed(KEY_DOWN))
     {
         cursor.MoveDown(TextBuffer.size() - 1);
-        cursor.SetX(TextBuffer[cursor.GetY()].size());
+        cursor.SetX(std::min(cursor.GetX(), (int)TextBuffer[cursor.GetY()].size()));
     }
 }
 

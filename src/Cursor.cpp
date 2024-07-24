@@ -33,7 +33,9 @@ void Cursor::Render()
 {
     if (Visible)
     {
-        DrawRectangle(X * 10, Y * 10, 5, 20, RAYWHITE);
+        int cursorX = X * MeasureText("W", FONT_SIZE) + TEXT_PADDING;
+        int cursorY = Y * (FONT_SIZE + 5) + TEXT_PADDING;
+        DrawRectangle(cursorX, cursorY, CURSOR_WIDTH, FONT_SIZE, RAYWHITE);
     }
 }
 
