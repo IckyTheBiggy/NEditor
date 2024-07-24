@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/SmoothEditor.dir/src/Cursor.cpp.o CMakeFiles/SmoothEditor.dir/src/main.cpp.o CMakeFiles/SmoothEditor.dir/src/Editor.cpp.o CMakeFiles/SmoothEditor.dir/src/InputController.cpp.o -o SmoothEditor  /usr/lib/libraylib.so -L/usr/lib -lraylib
