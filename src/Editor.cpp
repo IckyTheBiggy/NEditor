@@ -25,7 +25,7 @@ void HandleInput(Cursor& cursor)
         key = GetCharPressed();
     }
 
-    if (IsKeyPressed(KEY_BACKSPACE))
+    if (IsKeyPressedRepeat(KEY_BACKSPACE))
     {
         if (cursor.GetX() > 0)
         {
@@ -34,30 +34,30 @@ void HandleInput(Cursor& cursor)
         }
     }
 
-    if (IsKeyPressed(KEY_ENTER))
+    if (IsKeyPressedRepeat(KEY_ENTER))
     {
         TextBuffer.insert(TextBuffer.begin() + cursor.GetY() + 1, "");
         cursor.MoveDown(TextBuffer.size() - 1);
         cursor.SetX(0);
     }
 
-    if (IsKeyPressed(KEY_LEFT))
+    if (IsKeyPressedRepeat(KEY_LEFT))
     {
         cursor.MoveLeft();
     }
 
-    if (IsKeyPressed(KEY_RIGHT))
+    if (IsKeyPressedRepeat(KEY_RIGHT))
     {
         cursor.MoveRight(TextBuffer[cursor.GetY()].size());
     }
 
-    if (IsKeyPressed(KEY_UP))
+    if (IsKeyPressedRepeat(KEY_UP))
     {
         cursor.MoveUp();
         cursor.SetX(std::min(cursor.GetX(), (int)TextBuffer[cursor.GetY()].size()));
     }
 
-    if (IsKeyPressed(KEY_DOWN))
+    if (IsKeyPressedRepeat(KEY_DOWN))
     {
         cursor.MoveDown(TextBuffer.size() - 1);
         cursor.SetX(std::min(cursor.GetX(), (int)TextBuffer[cursor.GetY()].size()));
