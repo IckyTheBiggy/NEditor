@@ -13,8 +13,11 @@ void HandleInput(Cursor& cursor)
     {
         if (key >= 32 && key <= 126)
         {
-            TextBuffer[cursor.GetY()].insert(cursor.GetX(), 1, (char)key);
-            cursor.MoveRight(TextBuffer[cursor.GetY()].size());
+            if (cursor.GetX() <= TextBuffer[cursor.GetY()].size())
+            {
+                TextBuffer[cursor.GetY()].insert(cursor.GetX(), 1, (char)key);
+                cursor.MoveRight(TextBuffer[cursor.GetY()].size());
+            }
         }
 
         key = GetCharPressed();
@@ -33,7 +36,7 @@ void HandleInput(Cursor& cursor)
     {
         TextBuffer.insert(TextBuffer.begin() + cursor.GetY() + 1, "");
         cursor.MoveDown(TextBuffer.size() - 1);
-        cursor.MoveRight(0);
+        cursor.SetX(0);
     }
 
     if (IsKeyPressed(KEY_LEFT))
@@ -49,11 +52,13 @@ void HandleInput(Cursor& cursor)
     if (IsKeyPressed(KEY_UP))
     {
         cursor.MoveUp();
+        cursor.SetX(TextBuffer[cursor.GetY()].size());
     }
 
     if (IsKeyPressed(KEY_DOWN))
     {
         cursor.MoveDown(TextBuffer.size() - 1);
+        cursor.SetX(TextBuffer[cursor.GetY()].size());
     }
 }
 

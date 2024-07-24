@@ -57,3 +57,13 @@ int Cursor::GetY() const
 {
     return Y;
 }
+
+void Cursor::SetX(int newX)
+{
+    X = newX;
+}
+
+void Cursor::SetY(int newY)
+{
+    Y = newY;
+}

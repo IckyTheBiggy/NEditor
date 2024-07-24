@@ -17,6 +17,8 @@ public:
 
     int GetX() const;
     int GetY() const;
+    void SetX(int newX);
+    void SetY(int newY);
 
 private:
     int X;
