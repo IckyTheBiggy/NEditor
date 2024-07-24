@@ -37,9 +37,9 @@ void Cursor::Render(const std::vector<std::string>& textBuffer, const Font& font
         std::string line = textBuffer[y];
         int cursorX = TEXT_PADDING;
         
-        for (int i = 0; i < x; i++)
+        if (x > 0)
         {
-            cursorX += MeasureText(line.substr(i, 1).c_str(), font.baseSize);
+            cursorX += MeasureText(line.substr(0, x).c_str(), font.baseSize);
         }
 
         int cursorY = TEXT_PADDING + y * (font.baseSize + font.baseSize / 2);

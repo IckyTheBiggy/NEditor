@@ -25,7 +25,7 @@ void HandleInput(Cursor& cursor)
         key = GetCharPressed();
     }
 
-    if (IsKeyPressedRepeat(KEY_BACKSPACE))
+    if (IsKeyPressed(KEY_BACKSPACE))
     {
         if (cursor.GetX() > 0)
         {
@@ -34,30 +34,30 @@ void HandleInput(Cursor& cursor)
         }
     }
 
-    if (IsKeyPressedRepeat(KEY_ENTER))
+    if (IsKeyPressed(KEY_ENTER))
     {
         TextBuffer.insert(TextBuffer.begin() + cursor.GetY() + 1, "");
         cursor.MoveDown(TextBuffer.size() - 1);
         cursor.SetX(0);
     }
 
-    if (IsKeyPressedRepeat(KEY_LEFT))
+    if (IsKeyPressed(KEY_LEFT))
     {
         cursor.MoveLeft();
     }
 
-    if (IsKeyPressedRepeat(KEY_RIGHT))
+    if (IsKeyPressed(KEY_RIGHT))
     {
         cursor.MoveRight(TextBuffer[cursor.GetY()].size());
     }
 
-    if (IsKeyPressedRepeat(KEY_UP))
+    if (IsKeyPressed(KEY_UP))
     {
         cursor.MoveUp();
         cursor.SetX(std::min(cursor.GetX(), (int)TextBuffer[cursor.GetY()].size()));
     }
 
-    if (IsKeyPressedRepeat(KEY_DOWN))
+    if (IsKeyPressed(KEY_DOWN))
     {
         cursor.MoveDown(TextBuffer.size() - 1);
         cursor.SetX(std::min(cursor.GetX(), (int)TextBuffer[cursor.GetY()].size()));
@@ -80,7 +80,7 @@ void Editor::Run()
     SetTargetFPS(120);
 
     Font font = GetFontDefault();
-    font.baseSize = 10;
+    font.baseSize = 20;
     Cursor cursor(0, 0, TextBuffer, 30);
 
     while (!WindowShouldClose()) 
