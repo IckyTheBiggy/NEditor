@@ -13,10 +13,12 @@ void HandleInput(Cursor& cursor)
     {
         if (key >= 32 && key <= 126)
         {
-            if (cursor.GetX() <= TextBuffer[cursor.GetY()].size())
+            std::string& currentLine = TextBuffer[cursor.GetY()];
+
+            if (cursor.GetX() <= currentLine.size())
             {
-                TextBuffer[cursor.GetY()].insert(cursor.GetX(), 1, (char)key);
-                cursor.MoveRight(TextBuffer[cursor.GetY()].size());
+                currentLine.insert(cursor.GetX(), 1, (char)key);
+                cursor.MoveRight(currentLine.size());
             }
         }
 
@@ -62,11 +64,11 @@ void HandleInput(Cursor& cursor)
     }
 }
 
-void DrawTextBuffer()
+void DrawTextBuffer(const Font& font)
 {
     for (int i = 0; i < TextBuffer.size(); i++)
     {
-        DrawText(TextBuffer[i].c_str(), 10, 10 + 20 * i, 20, RAYWHITE);
+        DrawText(TextBuffer[i].c_str(), TEXT_PADDING, TEXT_PADDING + i * (font.baseSize + font.baseSize / 2), font.baseSize, RAYWHITE);
     }
 }
 
@@ -77,6 +79,8 @@ void Editor::Run()
 
     SetTargetFPS(120);
 
+    Font font = GetFontDefault();
+    font.baseSize = 10;
     Cursor cursor(0, 0, 30);
 
     while (!WindowShouldClose()) 
@@ -86,8 +90,8 @@ void Editor::Run()
 
         HandleInput(cursor);
         cursor.UpdateBlink();
-        DrawTextBuffer();
-        cursor.Render();
+        DrawTextBuffer(font);
+        cursor.Render(TextBuffer, font);
 
         EndDrawing();
     }

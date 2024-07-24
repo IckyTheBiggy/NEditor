@@ -1,71 +1,84 @@
 #include "Cursor.h"
 
-Cursor::Cursor(int x, int y, int blinkInterval)
+Cursor::Cursor(int x, int y, std::vector<std::string> textBuffer, int blinkInterval)
 {
-    this->X = x;
-    this->Y = y;
-    this->BlinkInterval = blinkInterval;
-    this->BlinkTimer = 0;
-    this->Visible = true;
+    this->x = x;
+    this->y = y;
+    this->textBuffer = textBuffer;
+    this->blinkInterval = blinkInterval;
+    this->blinkTimer = 0;
+    this->visible = true;
 }
 
 void Cursor::MoveLeft()
 {
-    if (X > 0) X--;
+    if (x > 0) x--;
 }
 
 void Cursor::MoveRight(int maxX)
 {
-    if (X < maxX) X++;
+    if (x < maxX) x++;
 }
 
 void Cursor::MoveUp()
 {
-    if (Y > 0) Y--;
+    if (y > 0) y--;
 }
 
 void Cursor::MoveDown(int maxY)
 {
-    if (Y < maxY) Y++;
+    if (y < maxY) y++;
 }
 
-void Cursor::Render()
+void Cursor::Render(const std::vector<std::string>& textBuffer, const Font& font)
 {
-    if (Visible)
+    if (visible)
     {
-        int cursorX = X * MeasureText("W", FONT_SIZE) + TEXT_PADDING;
-        int cursorY = Y * (FONT_SIZE + 5) + TEXT_PADDING;
-        DrawRectangle(cursorX, cursorY, CURSOR_WIDTH, FONT_SIZE, RAYWHITE);
+        std::string line = textBuffer[y];
+        int cursorX = TEXT_PADDING;
+        
+        for (int i = 0; i < x; i++)
+        {
+            cursorX += MeasureText(line.substr(i, 1).c_str(), font.baseSize);
+        }
+
+        int cursorY = TEXT_PADDING + y * (font.baseSize + font.baseSize / 2);
+        DrawRectangle(cursorX, cursorY, CURSOR_WIDTH, font.baseSize, RAYWHITE);
     }
 }
 
 void Cursor::UpdateBlink()
 {
-    BlinkTimer++;
+    blinkTimer++;
 
-    if (BlinkTimer >= BlinkInterval)
+    if (blinkTimer >= blinkInterval)
     {
-        Visible = !Visible;
-        BlinkTimer = 0;
+        visible = !visible;
+        blinkTimer = 0;
     }
 }
 
 int Cursor::GetX() const
 {
-    return X;
+    return x;
 }
 
 int Cursor::GetY() const
 {
-    return Y;
+    return y;
 }
 
 void Cursor::SetX(int newX)
 {
-    X = newX;
+    x = newX;
 }
 
 void Cursor::SetY(int newY)
 {
-    Y = newY;
+    y = newY;
+}
+
+void Cursor::SetTextBuffer(std::vector<std::string>& textBuffer)
+{
+    this->textBuffer = textBuffer;
 }
