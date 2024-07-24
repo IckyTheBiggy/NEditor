@@ -81,7 +81,7 @@ void Editor::Run()
 
     Font font = GetFontDefault();
     font.baseSize = 10;
-    Cursor cursor(0, 0, 30);
+    Cursor cursor(0, 0, TextBuffer, 30);
 
     while (!WindowShouldClose()) 
     {
