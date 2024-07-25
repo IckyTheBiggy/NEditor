@@ -5,7 +5,8 @@
 Cursor::Cursor(int x, int y, int blinkInterval, const std::vector<std::string>& textBuffer, const Font& font)
     : textBuffer(textBuffer), font(font)
 {
-    //I intentionally didnt' set these to x, y to get the lerp on start, you can change it if you wish
+    this->startX = this->currentX = 0;
+    this->startY = this->currentY = 0;
     this->x = x;
     this->y = y;
 
@@ -39,12 +40,10 @@ void Cursor::MoveDown(int maxY)
 void Cursor::Render()
 {
     float t = CubicOut(LerpPos());
-    currentX = std::lerp(startX, targetX, t);
-    currentY = std::lerp(startY, targetY, t);
+    currentX = Lerp(startX, targetX, t);
+    currentY = Lerp(startY, targetY, t);
 
-    //Doing this check after lerping so it updates even if invisible
     if (!visible) return;
-    
     DrawRectangle(currentX, currentY, CURSOR_WIDTH, font.baseSize, RAYWHITE);
 }
 
@@ -99,6 +98,7 @@ void Cursor::UpdatePos()
     targetY = TEXT_PADDING + y * (font.baseSize + font.baseSize / 2);
     
     lerpPos = 0;
+    std::cerr << startX << " " << startY << " " << targetX << " " << targetY;
     ResetBlink();
 }
 
@@ -115,6 +115,12 @@ float Cursor::ExpoOut(float t)
     return t == 1.0f ? 1.0f : 1.0f - std::pow(2, -10 * t);
 }
 
-float Cursor::CubicOut(float t) {
-        return 1 - std::pow(1 - t, 3);
+float Cursor::CubicOut(float t)
+{
+    return 1 - std::pow(1 - t, 3);
+}
+
+float Cursor::Lerp(float a, float b, float t)
+{
+    return a + t * (b - a);
 }
