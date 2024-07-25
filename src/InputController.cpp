@@ -8,6 +8,7 @@ struct KeyRepeatInfo
 };
 
 bool ctrlPressed;
+bool shiftPressed;
 
 KeyRepeatInfo keyRepeat = {0, 0.0f, false};
 
@@ -21,7 +22,33 @@ void InputController::HandleKeyPress(std::vector<std::string>& textBuffer, Curso
     switch (key)
     {
         case KEY_BACKSPACE:
-            if (cursor.GetX() > 0)
+            if (ctrlPressed)
+            {
+                int x = cursor.GetX();
+                int y = cursor.GetY();
+                
+                std::string& line = textBuffer[y];
+
+                if (x > 0)
+                {
+                    int start = x;
+
+                    while (start > 0 && !IsWordChar(line[start - 1]))
+                    {
+                        start--;
+                    }
+
+                    while (start > 0 && IsWordChar(line[start - 1]))
+                    {
+                        start--;
+                    }
+                    
+                    line.erase(start, x - start);
+                    cursor.SetX(start);
+                }
+            }
+
+            else if (cursor.GetX() > 0)
             {
                 textBuffer[cursor.GetY()].erase(cursor.GetX() - 1, 1);
                 cursor.MoveLeft();
@@ -149,6 +176,11 @@ void InputController::HandleInput(std::vector<std::string>& textBuffer, Cursor& 
         ctrlPressed = true;
     else if (IsKeyReleased(KEY_LEFT_CONTROL))
         ctrlPressed = false;
+
+    if (IsKeyDown(KEY_LEFT_SHIFT))
+        shiftPressed = true;
+    else if (IsKeyReleased(KEY_LEFT_SHIFT))
+        shiftPressed = false;
 
     if (IsKeyDown(keyRepeat.key))
     {
