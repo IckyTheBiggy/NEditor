@@ -20,7 +20,10 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y cmake git
+        sudo apt-get install -y cmake git \
+            libwayland-dev wayland-protocols \
+            libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev \
+            libxi-dev
 
     - name: Build and Install raylib
       run: |
