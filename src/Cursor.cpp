@@ -40,7 +40,7 @@ void Cursor::MoveDown()
 
 void Cursor::Render()
 {
-    float t = Lerping::LerpPos(lerpPos, GetFrameTime() / 0.25f, Easing::ElasticOut);
+    float t = Lerping::LerpPos(lerpPos, GetFrameTime() / 0.1f, Easing::CubicOut);
     currentX = Lerping::Lerp(startX, targetX, t);
     currentY = Lerping::Lerp(startY, targetY, t);
 
