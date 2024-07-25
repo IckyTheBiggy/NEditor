@@ -97,7 +97,7 @@ void Cursor::UpdatePos()
     startX = currentX;
     startY = currentY;
 
-    targetX = TEXT_PADDING + 1 + (x > 0 ? MeasureText(line.substr(0, x + 1).c_str(), font.baseSize) : 0);
+    targetX = TEXT_PADDING + 1 + (x > 0 ? MeasureText(line.substr(0, x).c_str(), font.baseSize) : 0);
     targetY = TEXT_PADDING + y * (font.baseSize + font.baseSize / 2);
     
     lerpPos = 0;
