@@ -44,8 +44,4 @@ private:
     const Font& font;
 
     void UpdatePos();
-    float Lerp(float a, float b, float t);
-    float LerpPos();
-    float ExpoOut(float t);
-    float CubicOut(float t);
 };
