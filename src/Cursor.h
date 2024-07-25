@@ -3,6 +3,8 @@
 #include <raylib.h>
 #include <string>
 #include <vector>
+#include <iostream>
+#include <cmath>
 
 #define FONT_SIZE 20
 #define TEXT_PADDING 10
@@ -31,6 +33,7 @@ public:
 private:
     int x;
     int y;
+    int t;
     int blinkInterval;
     int blinkTimer;
     bool visible;
