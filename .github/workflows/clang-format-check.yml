@@ -21,7 +21,14 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             base_commit=$(git merge-base ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
-            git diff --name-only $base_commit ${{ github.sha }} | grep -E '\.(cpp|h|c|cc|cxx|hpp)$' | xargs -r clang-format --style=file --dry-run --Werror
+            files=$(git diff --name-only $base_commit ${{ github.sha }} | grep -E '\.(cpp|h|c|cc|cxx|hpp)$')
           else
-            git diff --name-only HEAD^ HEAD | grep -E '\.(cpp|h|c|cc|cxx|hpp)$' | xargs -r clang-format --style=file --dry-run --Werror
+            files=$(git diff --name-only HEAD^ HEAD | grep -E '\.(cpp|h|c|cc|cxx|hpp)$')
+          fi
+          
+          if [ -n "$files" ]; then
+            echo "$files" | xargs clang-format -style=file -i
+            git diff --exit-code || (echo "Clang-format check failed. Please run clang-format locally and commit the changes." && exit 1)
+          else
+            echo "No C/C++ files to check."
           fi
