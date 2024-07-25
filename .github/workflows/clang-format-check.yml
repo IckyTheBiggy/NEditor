@@ -1,0 +1,21 @@
+name: ClangFormat Check
+
+on: [push, pull_request]
+
+jobs:
+  clang-format:
+    name: Run ClangFormat
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install ClangFormat
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-format
+
+      - name: Check ClangFormat
+        run: |
+          git diff --name-only HEAD^ HEAD | grep -E '\.(cpp|h|c|cc|cxx|hpp)$' | xargs clang-format --style=file --dry-run --Werror
