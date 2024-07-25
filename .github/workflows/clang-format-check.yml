@@ -6,10 +6,11 @@ jobs:
   clang-format:
     name: Run ClangFormat
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Install ClangFormat
         run: |
@@ -18,4 +19,9 @@ jobs:
 
       - name: Check ClangFormat
         run: |
-          git diff --name-only HEAD^ HEAD | grep -E '\.(cpp|h|c|cc|cxx|hpp)$' | xargs clang-format --style=file --dry-run --Werror
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base_commit=$(git merge-base ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
+            git diff --name-only $base_commit ${{ github.sha }} | grep -E '\.(cpp|h|c|cc|cxx|hpp)$' | xargs -r clang-format --style=file --dry-run --Werror
+          else
+            git diff --name-only HEAD^ HEAD | grep -E '\.(cpp|h|c|cc|cxx|hpp)$' | xargs -r clang-format --style=file --dry-run --Werror
+          fi
