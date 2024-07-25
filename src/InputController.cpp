@@ -11,6 +11,11 @@ bool ctrlPressed;
 
 KeyRepeatInfo keyRepeat = {0, 0.0f, false};
 
+bool IsWordChar(char c)
+{
+    return std::isalnum(c) || c == '_';
+}
+
 void InputController::HandleKeyPress(std::vector<std::string>& textBuffer, Cursor& cursor, int key)
 {
     switch (key)
@@ -41,15 +46,62 @@ void InputController::HandleKeyPress(std::vector<std::string>& textBuffer, Curso
         break;
 
         case KEY_LEFT:
-            cursor.MoveLeft();
             if (ctrlPressed)
-                std::cerr << "Move Left" << std::endl;
+            {
+                int x = cursor.GetX();
+                int y = cursor.GetY();
+                std::string& line = textBuffer[y];
+
+                if (x > 0)
+                {
+                    while (x > 0 && !IsWordChar(line[x - 1]))
+                    {
+                        x--;
+                    }
+
+                    while (x > 0 && IsWordChar(line[x - 1]))
+                    {
+                        x--;
+                    }
+                }
+
+                cursor.SetX(x);
+            }
+
+            else
+            {
+                cursor.MoveLeft();
+            }
         break;
 
         case KEY_RIGHT:
-            cursor.MoveRight();
             if (ctrlPressed)
-                std::cerr << "Move Right" << std::endl;
+            {
+                int x = cursor.GetX();
+                int y = cursor.GetY();
+                std::string& line = textBuffer[y];
+                int lineLength = line.size();
+
+                if (x < lineLength)
+                {
+                    while (x < lineLength && !IsWordChar(line[x]))
+                    {
+                        x++;
+                    }
+
+                    while (x < lineLength && IsWordChar(line[x]))
+                    {
+                        x++;
+                    }
+                }
+
+                cursor.SetX(x);
+            }
+
+            else
+            {
+                cursor.MoveRight();
+            }
         break;
 
         case KEY_UP:
