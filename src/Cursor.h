@@ -13,15 +13,16 @@
 class Cursor
 {   
 public:
-    Cursor(int x, int y, std::vector<std::string> textBuffer, int blinkInterval);
+    Cursor(int x, int y, int blinkInterval, const std::vector<std::string>& textBuffer, const Font& font);
 
     void MoveLeft();
     void MoveRight(int maxX);
     void MoveUp();
     void MoveDown(int maxY);
 
-    void Render(const std::vector<std::string>& textBuffer, const Font& font);
+    void Render();
     void UpdateBlink();
+    void ResetBlink();
 
     int GetX() const;
     int GetY() const;
@@ -31,11 +32,18 @@ public:
     void SetTextBuffer(std::vector<std::string>& textBuffer);
 
 private:
-    int x;
-    int y;
-    int t;
+    int x, startX, currentX, targetX;
+    int y, startY, currentY, targetY;
+    float lerpPos;
+
     int blinkInterval;
     int blinkTimer;
     bool visible;
-    std::vector<std::string> textBuffer;
+
+    const std::vector<std::string>& textBuffer;
+    const Font& font;
+
+    void UpdatePos();
+    float LerpPos();
+    float ExpoOut(float t);
 };

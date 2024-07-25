@@ -23,7 +23,7 @@ void Editor::Run()
     Font font = GetFontDefault();
     font.baseSize = 20;
     InputController inputController;
-    Cursor cursor(0, 0, TextBuffer, 30);
+    Cursor cursor(0, 0, 30, TextBuffer, font);
 
     while (!WindowShouldClose()) 
     {
@@ -33,7 +33,7 @@ void Editor::Run()
         inputController.HandleInput(TextBuffer, cursor);
         cursor.UpdateBlink();
         DrawTextBuffer(font);
-        cursor.Render(TextBuffer, font);
+        cursor.Render();
 
         EndDrawing();
     }
