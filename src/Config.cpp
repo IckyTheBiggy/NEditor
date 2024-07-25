@@ -12,6 +12,7 @@ void Config::CreateDefaultConfig()
 {
     toml::table defaultConfig;
 
+    defaultConfig.insert("fps", 120);
     defaultConfig.insert("easing-speed", 0.25);
 
     std::filesystem::create_directories(configPath.parent_path());
