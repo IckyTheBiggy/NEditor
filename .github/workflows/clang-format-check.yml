@@ -1,3 +1,4 @@
+
 name: ClangFormat Check
 
 on: [push, pull_request]
@@ -16,7 +17,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y clang-format
-
       - name: Check ClangFormat
         run: |
           echo "Event name: ${{ github.event_name }}"
