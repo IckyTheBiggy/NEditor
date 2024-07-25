@@ -11,10 +11,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up ClangFormat
-        uses: llvm/actions/clang-format@v1
-        with:
-          clang-format-version: '16.0.0'
+      - name: Install ClangFormat
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-format
 
       - name: Check ClangFormat
         run: |
