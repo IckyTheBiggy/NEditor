@@ -30,6 +30,7 @@ void InputController::HandleKeyPress(std::vector<std::string>& textBuffer, Curso
                 textBuffer.erase(textBuffer.begin() + cursor.GetY());
                 textBuffer.erase(textBuffer.begin() + cursor.GetY());
                 cursor.MoveUp();
+                cursor.SetX(previousLine.size());
             }
         break;
 
