@@ -46,4 +46,5 @@ private:
     void UpdatePos();
     float LerpPos();
     float ExpoOut(float t);
+    float CubicOut(float t);
 };

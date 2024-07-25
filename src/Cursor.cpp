@@ -6,15 +6,14 @@ Cursor::Cursor(int x, int y, int blinkInterval, const std::vector<std::string>& 
     : textBuffer(textBuffer), font(font)
 {
     //I intentionally didnt' set these to x, y to get the lerp on start, you can change it if you wish
-    this->startX = this->x = 0;
-    this->startY = this->y = 0;
-    this->targetX = x;
-    this->targetY = y;
-    this->lerpPos = 0;
+    this->x = x;
+    this->y = y;
 
     this->blinkInterval = blinkInterval;
     this->blinkTimer = 0;
     this->visible = true;
+    
+    UpdatePos();
 }
 
 void Cursor::MoveLeft()
@@ -39,7 +38,7 @@ void Cursor::MoveDown(int maxY)
 
 void Cursor::Render()
 {
-    float t = ExpoOut(LerpPos());
+    float t = CubicOut(LerpPos());
     currentX = std::lerp(startX, targetX, t);
     currentY = std::lerp(startY, targetY, t);
 
@@ -106,7 +105,7 @@ void Cursor::UpdatePos()
 float Cursor::LerpPos()
 {
     if (lerpPos >= 1) return 1;
-    lerpPos += GetFrameTime() / 0.25f;
+    lerpPos += GetFrameTime() / 0.1f;
     lerpPos = lerpPos > 1 ? 1 : lerpPos;
     return lerpPos;
 }
@@ -114,4 +113,8 @@ float Cursor::LerpPos()
 float Cursor::ExpoOut(float t)
 {
     return t == 1.0f ? 1.0f : 1.0f - std::pow(2, -10 * t);
+}
+
+float Cursor::CubicOut(float t) {
+        return 1 - std::pow(1 - t, 3);
 }
