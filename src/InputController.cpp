@@ -7,6 +7,8 @@ struct KeyRepeatInfo
     bool isRepeating;
 };
 
+bool ctrlPressed;
+
 KeyRepeatInfo keyRepeat = {0, 0.0f, false};
 
 void InputController::HandleKeyPress(std::vector<std::string>& textBuffer, Cursor& cursor, int key)
@@ -19,6 +21,16 @@ void InputController::HandleKeyPress(std::vector<std::string>& textBuffer, Curso
                 textBuffer[cursor.GetY()].erase(cursor.GetX() - 1, 1);
                 cursor.MoveLeft();
             }
+
+            else if (cursor.GetX() <= 0 && cursor.GetY() > 0)
+            {
+                std::string currentLine = textBuffer[cursor.GetY()];
+                std::string previousLine = textBuffer[cursor.GetY() - 1];
+                textBuffer.insert(textBuffer.begin() + cursor.GetY() - 1, previousLine + currentLine);
+                textBuffer.erase(textBuffer.begin() + cursor.GetY());
+                textBuffer.erase(textBuffer.begin() + cursor.GetY());
+                cursor.MoveUp();
+            }
         break;
 
         case KEY_ENTER:
@@ -29,10 +41,14 @@ void InputController::HandleKeyPress(std::vector<std::string>& textBuffer, Curso
 
         case KEY_LEFT:
             cursor.MoveLeft();
+            if (ctrlPressed)
+                std::cerr << "Move Left" << std::endl;
         break;
 
         case KEY_RIGHT:
             cursor.MoveRight();
+            if (ctrlPressed)
+                std::cerr << "Move Right" << std::endl;
         break;
 
         case KEY_UP:
@@ -75,6 +91,11 @@ void InputController::HandleInput(std::vector<std::string>& textBuffer, Cursor& 
         keyRepeat.isRepeating = false;
         HandleKeyPress(textBuffer, cursor, keyPressed);
     }
+
+    if (IsKeyDown(KEY_LEFT_CONTROL))
+        ctrlPressed = true;
+    else if (IsKeyReleased(KEY_LEFT_CONTROL))
+        ctrlPressed = false;
 
     if (IsKeyDown(keyRepeat.key))
     {

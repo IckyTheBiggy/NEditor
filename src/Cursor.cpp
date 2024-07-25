@@ -45,7 +45,7 @@ void Cursor::Render()
     currentY = Lerp(startY, targetY, t);
 
     if (!visible) return;
-    DrawRectangle(currentX, currentY, CURSOR_WIDTH, font.baseSize, RAYWHITE);
+        DrawRectangle(currentX, currentY, CURSOR_WIDTH, font.baseSize, RAYWHITE);
 }
 
 void Cursor::UpdateBlink()
