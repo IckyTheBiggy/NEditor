@@ -1,5 +1,5 @@
 #include "Cursor.h"
-#include <iostream>
+#include "Lerping.h"
 
 Cursor::Cursor(int x, int y, int blinkInterval, const std::vector<std::string>& textBuffer, const Font& font)
     : textBuffer(textBuffer), font(font)
@@ -40,9 +40,9 @@ void Cursor::MoveDown()
 
 void Cursor::Render()
 {
-    float t = CubicOut(LerpPos());
-    currentX = Lerp(startX, targetX, t);
-    currentY = Lerp(startY, targetY, t);
+    float t = Lerping::LerpPos(lerpPos, GetFrameTime() / 0.25f, Easing::ElasticOut);
+    currentX = Lerping::Lerp(startX, targetX, t);
+    currentY = Lerping::Lerp(startY, targetY, t);
 
     if (!visible) return;
         DrawRectangle(currentX, currentY, CURSOR_WIDTH, font.baseSize, RAYWHITE);
@@ -102,27 +102,4 @@ void Cursor::UpdatePos()
     
     lerpPos = 0;
     ResetBlink();
-}
-
-float Cursor::LerpPos()
-{
-    if (lerpPos >= 1) return 1;
-    lerpPos += GetFrameTime() / 0.1f;
-    lerpPos = lerpPos > 1 ? 1 : lerpPos;
-    return lerpPos;
-}
-
-float Cursor::ExpoOut(float t)
-{
-    return t == 1.0f ? 1.0f : 1.0f - std::pow(2, -10 * t);
-}
-
-float Cursor::CubicOut(float t)
-{
-    return 1 - std::pow(1 - t, 3);
-}
-
-float Cursor::Lerp(float a, float b, float t)
-{
-    return a + t * (b - a);
 }
