@@ -1,21 +1,17 @@
-name: CMake on a single platform
+name: Build and Quality Checks
 
-on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+on: [push, pull_request]
 
 env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
 
 jobs:
-  build:
+  build-quality:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
     - name: Install dependencies
       run: |
@@ -24,7 +20,8 @@ jobs:
             libwayland-dev wayland-protocols \
             libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev \
             libxi-dev libxkbcommon-dev \
-            libgl1-mesa-dev libglu1-mesa-dev
+            libgl1-mesa-dev libglu1-mesa-dev \
+            clang cppcheck
 
     - name: Build and Install raylib
       run: |
@@ -45,3 +42,9 @@ jobs:
     - name: Test
       working-directory: ${{github.workspace}}/build
       run: ctest -C ${{env.BUILD_TYPE}}
+
+    - name: Run cppcheck - Check config issues
+      run: cppcheck --check-config ./src
+
+    - name: Run cppcheck - Full code analysis
+      run: cppcheck --enable=all --inconclusive --force --std=c++20 ./src
