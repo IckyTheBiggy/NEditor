@@ -10,7 +10,7 @@ add_executable(SmoothEditor
     src/Cursor.cpp
     src/main.cpp
     src/Editor.cpp
-    src/InputController
+    src/InputController.cpp
 )
 
 target_include_directories(SmoothEditor PRIVATE ${raylib_INCLUDE_DIRS})

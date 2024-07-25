@@ -3,6 +3,8 @@
 #include <raylib.h>
 #include <string>
 #include <vector>
+#include <iostream>
+#include <cmath>
 
 #define FONT_SIZE 20
 #define TEXT_PADDING 10
@@ -11,15 +13,16 @@
 class Cursor
 {   
 public:
-    Cursor(int x, int y, std::vector<std::string> textBuffer, int blinkInterval);
+    Cursor(int x, int y, int blinkInterval, const std::vector<std::string>& textBuffer, const Font& font);
 
     void MoveLeft();
-    void MoveRight(int maxX);
+    void MoveRight();
     void MoveUp();
-    void MoveDown(int maxY);
+    void MoveDown();
 
-    void Render(const std::vector<std::string>& textBuffer, const Font& font);
+    void Render();
     void UpdateBlink();
+    void ResetBlink();
 
     int GetX() const;
     int GetY() const;
@@ -29,10 +32,20 @@ public:
     void SetTextBuffer(std::vector<std::string>& textBuffer);
 
 private:
-    int x;
-    int y;
+    int x, startX, currentX, targetX;
+    int y, startY, currentY, targetY;
+    float lerpPos;
+
     int blinkInterval;
     int blinkTimer;
     bool visible;
-    std::vector<std::string> textBuffer;
+
+    const std::vector<std::string>& textBuffer;
+    const Font& font;
+
+    void UpdatePos();
+    float Lerp(float a, float b, float t);
+    float LerpPos();
+    float ExpoOut(float t);
+    float CubicOut(float t);
 };

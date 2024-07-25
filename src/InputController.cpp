@@ -23,7 +23,7 @@ void InputController::HandleKeyPress(std::vector<std::string>& textBuffer, Curso
 
         case KEY_ENTER:
             textBuffer.insert(textBuffer.begin() + cursor.GetY() + 1, "");
-            cursor.MoveDown(textBuffer.size() - 1);
+            cursor.MoveDown();
             cursor.SetX(0);
         break;
 
@@ -32,7 +32,7 @@ void InputController::HandleKeyPress(std::vector<std::string>& textBuffer, Curso
         break;
 
         case KEY_RIGHT:
-            cursor.MoveRight(textBuffer[cursor.GetY()].size());
+            cursor.MoveRight();
         break;
 
         case KEY_UP:
@@ -41,7 +41,7 @@ void InputController::HandleKeyPress(std::vector<std::string>& textBuffer, Curso
         break;
 
         case KEY_DOWN:
-            cursor.MoveDown(textBuffer.size() - 1);
+            cursor.MoveDown();
             cursor.SetX(std::min(cursor.GetX(), (int)textBuffer[cursor.GetY()].size()));
         break;
     }
@@ -60,7 +60,7 @@ void InputController::HandleInput(std::vector<std::string>& textBuffer, Cursor& 
             if (cursor.GetX() <= currentLine.size())
             {
                 currentLine.insert(cursor.GetX(), 1, (char)key);
-                cursor.MoveRight(currentLine.size());
+                cursor.MoveRight();
             }
         }
 

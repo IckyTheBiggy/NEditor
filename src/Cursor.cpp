@@ -1,54 +1,56 @@
 #include "Cursor.h"
+#include <iostream>
 
-Cursor::Cursor(int x, int y, std::vector<std::string> textBuffer, int blinkInterval)
+Cursor::Cursor(int x, int y, int blinkInterval, const std::vector<std::string>& textBuffer, const Font& font)
+    : textBuffer(textBuffer), font(font)
 {
+    this->startX = this->currentX = 0;
+    this->startY = this->currentY = 0;
     this->x = x;
     this->y = y;
-    this->textBuffer = textBuffer;
+
     this->blinkInterval = blinkInterval;
     this->blinkTimer = 0;
     this->visible = true;
+    
+    UpdatePos();
 }
 
 void Cursor::MoveLeft()
 {
-    if (x > 0) x--;
+    if (x > 0) SetX(x - 1);
 }
 
-void Cursor::MoveRight(int maxX)
+void Cursor::MoveRight()
 {
-    if (x < maxX) x++;
+    int max = textBuffer[GetY()].size();
+    if (x < max) SetX(x + 1);
 }
 
 void Cursor::MoveUp()
-{
-    if (y > 0) y--;
+{   
+    if (y > 0) SetY(y - 1);
 }
 
-void Cursor::MoveDown(int maxY)
+void Cursor::MoveDown()
 {
-    if (y < maxY) y++;
+    int max = textBuffer.size() - 1;
+    if (y < max) SetY(y + 1);
 }
 
-void Cursor::Render(const std::vector<std::string>& textBuffer, const Font& font)
+void Cursor::Render()
 {
-    if (visible)
-    {
-        std::string line = textBuffer[y];
-        int cursorX = TEXT_PADDING;
-        
-        if (x > 0)
-        {
-            cursorX += MeasureText(line.substr(0, x).c_str(), font.baseSize);
-        }
+    float t = CubicOut(LerpPos());
+    currentX = Lerp(startX, targetX, t);
+    currentY = Lerp(startY, targetY, t);
 
-        int cursorY = TEXT_PADDING + y * (font.baseSize + font.baseSize / 2);
-        DrawRectangle(cursorX, cursorY, CURSOR_WIDTH, font.baseSize, RAYWHITE);
-    }
+    if (!visible) return;
+    DrawRectangle(currentX, currentY, CURSOR_WIDTH, font.baseSize, RAYWHITE);
 }
 
 void Cursor::UpdateBlink()
 {
+    if (blinkInterval == 0 || lerpPos < 1) return;
     blinkTimer++;
 
     if (blinkTimer >= blinkInterval)
@@ -56,6 +58,12 @@ void Cursor::UpdateBlink()
         visible = !visible;
         blinkTimer = 0;
     }
+}
+
+void Cursor::ResetBlink()
+{
+    blinkTimer = 0;
+    visible = true;
 }
 
 int Cursor::GetX() const
@@ -71,14 +79,50 @@ int Cursor::GetY() const
 void Cursor::SetX(int newX)
 {
     x = newX;
+    std::cerr << x << std::endl;
+    UpdatePos();
 }
 
 void Cursor::SetY(int newY)
 {
     y = newY;
+    std::cerr << x << std::endl;
+    UpdatePos();
 }
 
-void Cursor::SetTextBuffer(std::vector<std::string>& textBuffer)
+void Cursor::UpdatePos()
 {
-    this->textBuffer = textBuffer;
+    std::string line = textBuffer[y];
+    
+    startX = currentX;
+    startY = currentY;
+
+    targetX = TEXT_PADDING + 1 + (x > 0 ? MeasureText(line.substr(0, x).c_str(), font.baseSize) : 0);
+    targetY = TEXT_PADDING + y * (font.baseSize + font.baseSize / 2);
+    
+    lerpPos = 0;
+    ResetBlink();
+}
+
+float Cursor::LerpPos()
+{
+    if (lerpPos >= 1) return 1;
+    lerpPos += GetFrameTime() / 0.1f;
+    lerpPos = lerpPos > 1 ? 1 : lerpPos;
+    return lerpPos;
+}
+
+float Cursor::ExpoOut(float t)
+{
+    return t == 1.0f ? 1.0f : 1.0f - std::pow(2, -10 * t);
+}
+
+float Cursor::CubicOut(float t)
+{
+    return 1 - std::pow(1 - t, 3);
+}
+
+float Cursor::Lerp(float a, float b, float t)
+{
+    return a + t * (b - a);
 }
