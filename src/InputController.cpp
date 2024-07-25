@@ -7,17 +7,62 @@ struct KeyRepeatInfo
     bool isRepeating;
 };
 
+bool ctrlPressed;
+bool shiftPressed;
+
 KeyRepeatInfo keyRepeat = {0, 0.0f, false};
+
+bool IsWordChar(char c)
+{
+    return std::isalnum(c) || c == '_';
+}
 
 void InputController::HandleKeyPress(std::vector<std::string>& textBuffer, Cursor& cursor, int key)
 {
     switch (key)
     {
         case KEY_BACKSPACE:
-            if (cursor.GetX() > 0)
+            if (ctrlPressed)
+            {
+                int x = cursor.GetX();
+                int y = cursor.GetY();
+                
+                std::string& line = textBuffer[y];
+
+                if (x > 0)
+                {
+                    int start = x;
+
+                    while (start > 0 && !IsWordChar(line[start - 1]))
+                    {
+                        start--;
+                    }
+
+                    while (start > 0 && IsWordChar(line[start - 1]))
+                    {
+                        start--;
+                    }
+                    
+                    line.erase(start, x - start);
+                    cursor.SetX(start);
+                }
+            }
+
+            else if (cursor.GetX() > 0)
             {
                 textBuffer[cursor.GetY()].erase(cursor.GetX() - 1, 1);
                 cursor.MoveLeft();
+            }
+
+            else if (cursor.GetX() <= 0 && cursor.GetY() > 0)
+            {
+                std::string currentLine = textBuffer[cursor.GetY()];
+                std::string previousLine = textBuffer[cursor.GetY() - 1];
+                textBuffer.insert(textBuffer.begin() + cursor.GetY() - 1, previousLine + currentLine);
+                textBuffer.erase(textBuffer.begin() + cursor.GetY());
+                textBuffer.erase(textBuffer.begin() + cursor.GetY());
+                cursor.MoveUp();
+                cursor.SetX(previousLine.size());
             }
         break;
 
@@ -28,11 +73,62 @@ void InputController::HandleKeyPress(std::vector<std::string>& textBuffer, Curso
         break;
 
         case KEY_LEFT:
-            cursor.MoveLeft();
+            if (ctrlPressed)
+            {
+                int x = cursor.GetX();
+                int y = cursor.GetY();
+                std::string& line = textBuffer[y];
+
+                if (x > 0)
+                {
+                    while (x > 0 && !IsWordChar(line[x - 1]))
+                    {
+                        x--;
+                    }
+
+                    while (x > 0 && IsWordChar(line[x - 1]))
+                    {
+                        x--;
+                    }
+                }
+
+                cursor.SetX(x);
+            }
+
+            else
+            {
+                cursor.MoveLeft();
+            }
         break;
 
         case KEY_RIGHT:
-            cursor.MoveRight();
+            if (ctrlPressed)
+            {
+                int x = cursor.GetX();
+                int y = cursor.GetY();
+                std::string& line = textBuffer[y];
+                int lineLength = line.size();
+
+                if (x < lineLength)
+                {
+                    while (x < lineLength && !IsWordChar(line[x]))
+                    {
+                        x++;
+                    }
+
+                    while (x < lineLength && IsWordChar(line[x]))
+                    {
+                        x++;
+                    }
+                }
+
+                cursor.SetX(x);
+            }
+
+            else
+            {
+                cursor.MoveRight();
+            }
         break;
 
         case KEY_UP:
@@ -75,6 +171,16 @@ void InputController::HandleInput(std::vector<std::string>& textBuffer, Cursor& 
         keyRepeat.isRepeating = false;
         HandleKeyPress(textBuffer, cursor, keyPressed);
     }
+
+    if (IsKeyDown(KEY_LEFT_CONTROL))
+        ctrlPressed = true;
+    else if (IsKeyReleased(KEY_LEFT_CONTROL))
+        ctrlPressed = false;
+
+    if (IsKeyDown(KEY_LEFT_SHIFT))
+        shiftPressed = true;
+    else if (IsKeyReleased(KEY_LEFT_SHIFT))
+        shiftPressed = false;
 
     if (IsKeyDown(keyRepeat.key))
     {
