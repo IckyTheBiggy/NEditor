@@ -1,6 +1,5 @@
 #include "Cursor.h"
 #include <iostream>
-#include <cmath>
 
 Cursor::Cursor(int x, int y, int blinkInterval, const std::vector<std::string>& textBuffer, const Font& font)
     : textBuffer(textBuffer), font(font)
@@ -22,19 +21,21 @@ void Cursor::MoveLeft()
     if (x > 0) SetX(x - 1);
 }
 
-void Cursor::MoveRight(int maxX)
+void Cursor::MoveRight()
 {
-    if (y < maxX) SetX(x + 1);
+    int max = textBuffer[GetY()].size();
+    if (x < max) SetX(x + 1);
 }
 
 void Cursor::MoveUp()
-{
-    if (x > 0) SetY(y - 1);
+{   
+    if (y > 0) SetY(y - 1);
 }
 
-void Cursor::MoveDown(int maxY)
+void Cursor::MoveDown()
 {
-    if (y < maxY) SetY(y + 1);
+    int max = textBuffer.size() - 1;
+    if (y < max) SetY(y + 1);
 }
 
 void Cursor::Render()
@@ -78,12 +79,14 @@ int Cursor::GetY() const
 void Cursor::SetX(int newX)
 {
     x = newX;
+    std::cerr << x << std::endl;
     UpdatePos();
 }
 
 void Cursor::SetY(int newY)
 {
     y = newY;
+    std::cerr << x << std::endl;
     UpdatePos();
 }
 
@@ -94,11 +97,10 @@ void Cursor::UpdatePos()
     startX = currentX;
     startY = currentY;
 
-    targetX = TEXT_PADDING + 1 + (targetX > 0 ? MeasureText(line.substr(0, x + 1).c_str(), font.baseSize) : 0);
+    targetX = TEXT_PADDING + 1 + (x > 0 ? MeasureText(line.substr(0, x + 1).c_str(), font.baseSize) : 0);
     targetY = TEXT_PADDING + y * (font.baseSize + font.baseSize / 2);
     
     lerpPos = 0;
-    std::cerr << startX << " " << startY << " " << targetX << " " << targetY;
     ResetBlink();
 }
 

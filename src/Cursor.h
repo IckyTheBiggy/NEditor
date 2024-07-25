@@ -16,9 +16,9 @@ public:
     Cursor(int x, int y, int blinkInterval, const std::vector<std::string>& textBuffer, const Font& font);
 
     void MoveLeft();
-    void MoveRight(int maxX);
+    void MoveRight();
     void MoveUp();
-    void MoveDown(int maxY);
+    void MoveDown();
 
     void Render();
     void UpdateBlink();
