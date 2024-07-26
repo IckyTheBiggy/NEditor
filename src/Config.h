@@ -1,20 +1,21 @@
 #pragma once
 
+#include "toml.hpp"
 #include <filesystem>
 #include <fstream>
 #include <iostream>
-#include "toml.hpp"
 
 class Config
 {
-public:
-    Config();
-    int GetInt(const std::string& key, int defaultValue) const;
-    float GetFloat(const std::string& key, float defaultValue) const;
-private:
-    void CreateDefaultConfig();
-    void LoadConfig();
+  public:
+	Config();
+	int GetInt(const std::string &key, int defaultValue) const;
+	float GetFloat(const std::string &key, float defaultValue) const;
 
-    std::filesystem::path configPath;
-    toml::table configData;
+  private:
+	void CreateDefaultConfig();
+	void LoadConfig();
+
+	std::filesystem::path configPath;
+	toml::table configData;
 };

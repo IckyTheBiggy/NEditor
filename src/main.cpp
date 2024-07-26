@@ -2,8 +2,8 @@
 #include <raylib.h>
 #include <string>
 
-int main() 
+int main()
 {
-    Editor Editor;
-    Editor.Run();
+	Editor Editor;
+	Editor.Run();
 }

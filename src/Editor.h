@@ -1,16 +1,17 @@
 #pragma once
 
+#include "Config.h"
+#include "Cursor.h"
+#include "InputController.h"
+#include "toml.hpp"
 #include <raylib.h>
 #include <string>
 #include <vector>
-#include "toml.hpp"
-#include "Config.h"
-#include "InputController.h"
-#include "Cursor.h"
 
 class Editor
 {
-public:
-    void Run();
-private:
+  public:
+	void Run();
+
+  private:
 };
