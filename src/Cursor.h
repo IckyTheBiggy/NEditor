@@ -8,7 +8,7 @@
 
 #define FONT_SIZE 20
 #define TEXT_PADDING 10
-#define CURSOR_WIDTH 10
+#define CURSOR_WIDTH 2
 
 class Cursor
 {   
