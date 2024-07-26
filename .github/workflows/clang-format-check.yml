@@ -18,6 +18,16 @@ jobs:
           sudo apt-get install -y clang-format
           clang-format --version
 
+      - name: Check for .clang-format file
+        run: |
+          if [ -f ".clang-format" ]; then
+            echo ".clang-format file exists"
+            cat .clang-format
+          else
+            echo ".clang-format file not found"
+            exit 1
+          fi
+
       - name: Check ClangFormat
         run: |
           echo "Event name: ${{ github.event_name }}"
@@ -40,24 +50,14 @@ jobs:
           if [ -n "$files" ]; then
             for file in $files; do
               echo "Checking $file"
-              clang-format --style=file -i "$file"
-              if git diff --exit-code "$file"; then
-                echo "$file is correctly formatted"
-              else
+              if ! clang-format --style=file --dry-run -Werror "$file"; then
                 echo "$file has formatting issues"
-                git diff "$file"
+                clang-format --style=file "$file" | diff -u "$file" -
                 exit 1
+              else
+                echo "$file is correctly formatted"
               fi
             done
           else
             echo "No C/C++ files to check."
-          fi
-
-      - name: Check for .clang-format file
-        run: |
-          if [ -f ".clang-format" ]; then
-            echo ".clang-format file exists"
-            cat .clang-format
-          else
-            echo ".clang-format file not found"
           fi
