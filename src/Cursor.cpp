@@ -2,7 +2,11 @@
 #include "Lerping.h"
 #include <raylib.h>
 
-Cursor::Cursor(int x, int y, int blinkInterval, const std::vector<std::string> &textBuffer, const Font &font)
+Cursor::Cursor(int x,
+    int y,
+    int blinkInterval,
+    const std::vector<std::string> &textBuffer,
+    const Font &font)
     : textBuffer(textBuffer), font(font)
 {
 	this->x = x;

@@ -7,6 +7,6 @@ BinPackArguments: false
 BinPackParameters: false
 AllowAllArgumentsOnNextLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
-ColumnLimit: 0
+ColumnLimit: 80
 ExperimentalAutoDetectBinPacking: false
 AlignAfterOpenBracket: DontAlign
