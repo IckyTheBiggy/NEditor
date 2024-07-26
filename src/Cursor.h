@@ -8,7 +8,7 @@
 
 #define FONT_SIZE 20
 #define TEXT_PADDING 10
-#define CURSOR_WIDTH 2
+#define CURSOR_WIDTH 10
 
 class Cursor
 {   
@@ -32,9 +32,11 @@ public:
     void SetTextBuffer(std::vector<std::string>& textBuffer);
 
 private:
-    int x, startX, currentX, targetX;
-    int y, startY, currentY, targetY;
+    int x;
+    int y;
     float lerpPos;
+    float startX, prevX, currentX, targetX, deltaX;
+    float startY, prevY, currentY, targetY, deltaY;
 
     int blinkInterval;
     int blinkTimer;
@@ -44,4 +46,5 @@ private:
     const Font& font;
 
     void UpdatePos();
+    void DrawCursor();
 };
