@@ -2,6 +2,7 @@
 
 #include "Config.h"
 #include "Cursor.h"
+#include "TextDocument.h"
 #include "InputController.h"
 #include "toml.hpp"
 #include <raylib.h>

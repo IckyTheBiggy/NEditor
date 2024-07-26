@@ -13,6 +13,7 @@ add_executable(SmoothEditor
     src/InputController.cpp
     src/Lerping.cpp
     src/Config.cpp
+    src/TextDocument.cpp
 )
 
 target_include_directories(SmoothEditor PRIVATE ${raylib_INCLUDE_DIRS})

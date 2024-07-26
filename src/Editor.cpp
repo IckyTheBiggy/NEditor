@@ -3,6 +3,7 @@
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 
+const std::string textFilePath = "../test.txt";
 std::vector<std::string> TextBuffer = {""};
 
 void DrawTextBuffer(const Font &font)
@@ -21,8 +22,10 @@ void Editor::Run()
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Window");
 
 	Config Config;
+	TextDocument textDocument;
 
 	SetTargetFPS(Config.GetInt("fps", 120));
+	textDocument.OpenTextDocument(textFilePath, TextBuffer);
 
 	Font font = GetFontDefault();
 	font.baseSize = 20;
@@ -42,5 +45,6 @@ void Editor::Run()
 		EndDrawing();
 	}
 
+	textDocument.SaveTextDocument(textFilePath, TextBuffer);
 	CloseWindow();
 }

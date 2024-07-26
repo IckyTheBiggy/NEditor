@@ -144,6 +144,11 @@ void InputController::HandleKeyPress(std::vector<std::string> &textBuffer,
 		break;
 
 	case KEY_HOME:
+		if (ctrlPressed)
+		{
+			cursor.SetY(0);
+			cursor.SetX(0);
+		}
 		cursor.SetX(0);
 		break;
 
