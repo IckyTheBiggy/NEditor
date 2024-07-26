@@ -56,13 +56,17 @@ jobs:
           
           if [ -n "$files" ]; then
             for file in $files; do
-              echo "Checking $file"
-              if ! clang-format --style=file:.clang-format --dry-run -Werror --verbose "$file"; then
-                echo "$file has formatting issues"
-                clang-format --style=file:.clang-format "$file" | diff -u "$file" -
-                exit 1
+              if [ -f "$file" ]; then
+                echo "Checking $file"
+                if ! clang-format --style=file:.clang-format --dry-run -Werror --verbose "$file"; then
+                  echo "$file has formatting issues"
+                  clang-format --style=file:.clang-format "$file" | diff -u "$file" -
+                  exit 1
+                else
+                  echo "$file is correctly formatted"
+                fi
               else
-                echo "$file is correctly formatted"
+                echo "File $file does not exist"
               fi
             done
           else
