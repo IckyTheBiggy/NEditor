@@ -33,9 +33,11 @@ class Cursor
 	void SetTextBuffer(std::vector<std::string> &textBuffer);
 
   private:
-	int x, startX, currentX, targetX;
-	int y, startY, currentY, targetY;
+	int x;
+	int y;
 	float lerpPos;
+	float startX, prevX, currentX, targetX, deltaX;
+	float startY, prevY, currentY, targetY, deltaY;
 
 	int blinkInterval;
 	int blinkTimer;
@@ -45,4 +47,5 @@ class Cursor
 	const Font &font;
 
 	void UpdatePos();
+	void DrawCursor();
 };

@@ -1,4 +1,5 @@
 #include "InputController.h"
+#include <raylib.h>
 
 struct KeyRepeatInfo
 {
@@ -140,6 +141,14 @@ void InputController::HandleKeyPress(std::vector<std::string> &textBuffer,
 		cursor.MoveDown();
 		cursor.SetX(
 		    std::min(cursor.GetX(), (int)textBuffer[cursor.GetY()].size()));
+		break;
+
+	case KEY_HOME:
+		cursor.SetX(0);
+		break;
+
+	case KEY_END:
+		cursor.SetX((int)textBuffer[cursor.GetY()].size());
 		break;
 	}
 }
