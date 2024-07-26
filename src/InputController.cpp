@@ -158,7 +158,8 @@ void InputController::HandleKeyPress(std::vector<std::string> &textBuffer,
 	}
 }
 
-void InputController::HandleInput(std::vector<std::string> &textBuffer, Cursor &cursor, TextDocument &textDocument)
+void InputController::HandleInput(std::vector<std::string> &textBuffer,
+                                  Cursor &cursor, TextDocument &textDocument)
 {
 	int key = GetCharPressed();
 

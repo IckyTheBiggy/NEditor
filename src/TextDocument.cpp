@@ -1,9 +1,6 @@
 #include "TextDocument.h"
 
-TextDocument::TextDocument(std::string filePath)
-{
-    this->filePath = filePath;
-}
+TextDocument::TextDocument(std::string filePath) { this->filePath = filePath; }
 
 bool TextDocument::OpenTextDocument(std::vector<std::string> &textBuffer)
 {
