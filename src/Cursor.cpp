@@ -1,20 +1,37 @@
 #include "Cursor.h"
 #include "Lerping.h"
+#include <raylib.h>
 
 Cursor::Cursor(int x, int y, int blinkInterval,
                const std::vector<std::string> &textBuffer, const Font &font)
     : textBuffer(textBuffer), font(font)
 {
-	this->startX = this->currentX = 0;
-	this->startY = this->currentY = 0;
 	this->x = x;
 	this->y = y;
+	this->startX = this->prevX = this->currentX = this->deltaX = 0;
+	this->startY = this->prevY = this->currentY = this->deltaY = 0;
 
 	this->blinkInterval = blinkInterval;
 	this->blinkTimer = 0;
 	this->visible = true;
 
 	UpdatePos();
+}
+
+void Cursor::Render()
+{
+	float t =
+	    Lerping::LerpPos(lerpPos, GetFrameTime() / 0.1f, Easing::CubicOut);
+	prevX = currentX;
+	prevY = currentY;
+	currentX = Lerping::Lerp(startX, targetX, t);
+	currentY = Lerping::Lerp(startY, targetY, t);
+	deltaX = currentX - prevX;
+	deltaY = currentY - prevY;
+
+	if (!visible)
+		return;
+	DrawCursor();
 }
 
 void Cursor::MoveLeft()
@@ -43,16 +60,42 @@ void Cursor::MoveDown()
 		SetY(y + 1);
 }
 
-void Cursor::Render()
+void Cursor::ResetBlink()
 {
-	float t =
-	    Lerping::LerpPos(lerpPos, GetFrameTime() / 0.1f, Easing::CubicOut);
-	currentX = Lerping::Lerp(startX, targetX, t);
-	currentY = Lerping::Lerp(startY, targetY, t);
+	blinkTimer = 0;
+	visible = true;
+}
 
-	if (!visible)
-		return;
-	DrawRectangle(currentX, currentY, CURSOR_WIDTH, font.baseSize, RAYWHITE);
+int Cursor::GetX() const { return x; }
+
+int Cursor::GetY() const { return y; }
+
+void Cursor::SetX(int newX)
+{
+	x = newX;
+	UpdatePos();
+}
+
+void Cursor::SetY(int newY)
+{
+	y = newY;
+	UpdatePos();
+}
+
+void Cursor::UpdatePos()
+{
+	std::string line = textBuffer[y];
+
+	startX = currentX;
+	startY = currentY;
+
+	targetX =
+	    TEXT_PADDING + 1 +
+	    (x > 0 ? MeasureText(line.substr(0, x).c_str(), font.baseSize) : 0);
+	targetY = TEXT_PADDING + y * (font.baseSize + (float)font.baseSize / 2);
+
+	lerpPos = 0;
+	ResetBlink();
 }
 
 void Cursor::UpdateBlink()
@@ -68,42 +111,36 @@ void Cursor::UpdateBlink()
 	}
 }
 
-void Cursor::ResetBlink()
+void Cursor::DrawCursor()
 {
-	blinkTimer = 0;
-	visible = true;
-}
+	int w = CURSOR_WIDTH;
+	int h = font.baseSize;
 
-int Cursor::GetX() const { return x; }
+	float offsetStrength = 0.25f;
+	float offsetPower = 2;
+	float scaledOffsetStrength = offsetStrength / sqrt(offsetPower);
 
-int Cursor::GetY() const { return y; }
+	float xOffset = -pow(deltaX, offsetPower) * scaledOffsetStrength;
+	float yOffset = pow(deltaY, offsetPower) * scaledOffsetStrength;
 
-void Cursor::SetX(int newX)
-{
-	x = newX;
-	std::cerr << x << std::endl;
-	UpdatePos();
-}
+	float rightOffset = xOffset > 0 ? xOffset : 0;
+	float leftOffset = xOffset < 0 ? xOffset : 0;
+	float topOffset = yOffset < 0 ? yOffset : 0;
+	float bottomOffset = yOffset > 0 ? yOffset : 0;
 
-void Cursor::SetY(int newY)
-{
-	y = newY;
-	std::cerr << x << std::endl;
-	UpdatePos();
-}
+	Vector2 tlOffset = {leftOffset, topOffset};
+	Vector2 trOffset = {rightOffset, topOffset};
+	Vector2 brOffset = {rightOffset, bottomOffset};
+	Vector2 blOffset = {leftOffset, bottomOffset};
 
-void Cursor::UpdatePos()
-{
-	std::string line = textBuffer[y];
+	Vector2 tl = {(float)currentX + tlOffset.x, (float)currentY + tlOffset.y};
+	Vector2 tr = {(float)currentX + trOffset.x + w,
+	              (float)currentY + trOffset.y};
+	Vector2 br = {(float)currentX + brOffset.x + w,
+	              (float)currentY + brOffset.y + h};
+	Vector2 bl = {(float)currentX + blOffset.x,
+	              (float)currentY + blOffset.y + h};
 
-	startX = currentX;
-	startY = currentY;
-
-	targetX =
-	    TEXT_PADDING + 1 +
-	    (x > 0 ? MeasureText(line.substr(0, x).c_str(), font.baseSize) : 0);
-	targetY = TEXT_PADDING + y * (font.baseSize + font.baseSize / 2);
-
-	lerpPos = 0;
-	ResetBlink();
+	DrawTriangle(tl, br, tr, RAYWHITE);
+	DrawTriangle(tl, bl, br, RAYWHITE);
 }
