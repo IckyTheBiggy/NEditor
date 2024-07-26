@@ -68,10 +68,21 @@ void InputController::HandleKeyPress(std::vector<std::string> &textBuffer,
 		break;
 
 	case KEY_ENTER:
-		textBuffer.insert(textBuffer.begin() + cursor.GetY() + 1, "");
+	{
+		int x = cursor.GetX();
+		int y = cursor.GetY();
+
+		std::string &currentLine = textBuffer[y];
+
+		std::string remainingText = currentLine.substr(x);
+		currentLine.erase(x);
+
+		textBuffer.insert(textBuffer.begin() + y + 1, remainingText);
+
 		cursor.MoveDown();
 		cursor.SetX(0);
-		break;
+	}
+	break;
 
 	case KEY_LEFT:
 		if (ctrlPressed)
