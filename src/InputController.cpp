@@ -15,8 +15,7 @@ KeyRepeatInfo keyRepeat = {0, 0.0f, false};
 
 bool IsWordChar(char c) { return std::isalnum(c) || c == '_'; }
 
-void InputController::HandleKeyPress(std::vector<std::string> &textBuffer,
-                                     Cursor &cursor, int key)
+void InputController::HandleKeyPress(std::vector<std::string> &textBuffer, Cursor &cursor, int key)
 {
 	switch (key)
 	{
@@ -57,8 +56,7 @@ void InputController::HandleKeyPress(std::vector<std::string> &textBuffer,
 		{
 			std::string currentLine = textBuffer[cursor.GetY()];
 			std::string previousLine = textBuffer[cursor.GetY() - 1];
-			textBuffer.insert(textBuffer.begin() + cursor.GetY() - 1,
-			                  previousLine + currentLine);
+			textBuffer.insert(textBuffer.begin() + cursor.GetY() - 1, previousLine + currentLine);
 			textBuffer.erase(textBuffer.begin() + cursor.GetY());
 			textBuffer.erase(textBuffer.begin() + cursor.GetY());
 			cursor.MoveUp();
@@ -133,17 +131,20 @@ void InputController::HandleKeyPress(std::vector<std::string> &textBuffer,
 
 	case KEY_UP:
 		cursor.MoveUp();
-		cursor.SetX(
-		    std::min(cursor.GetX(), (int)textBuffer[cursor.GetY()].size()));
+		cursor.SetX(std::min(cursor.GetX(), (int)textBuffer[cursor.GetY()].size()));
 		break;
 
 	case KEY_DOWN:
 		cursor.MoveDown();
-		cursor.SetX(
-		    std::min(cursor.GetX(), (int)textBuffer[cursor.GetY()].size()));
+		cursor.SetX(std::min(cursor.GetX(), (int)textBuffer[cursor.GetY()].size()));
 		break;
 
 	case KEY_HOME:
+		if (ctrlPressed)
+		{
+			cursor.SetY(0);
+			cursor.SetX(0);
+		}
 		cursor.SetX(0);
 		break;
 
@@ -153,8 +154,7 @@ void InputController::HandleKeyPress(std::vector<std::string> &textBuffer,
 	}
 }
 
-void InputController::HandleInput(std::vector<std::string> &textBuffer,
-                                  Cursor &cursor)
+void InputController::HandleInput(std::vector<std::string> &textBuffer, Cursor &cursor, TextDocument &textDocument)
 {
 	int key = GetCharPressed();
 
@@ -192,6 +192,14 @@ void InputController::HandleInput(std::vector<std::string> &textBuffer,
 		shiftPressed = true;
 	else if (IsKeyReleased(KEY_LEFT_SHIFT))
 		shiftPressed = false;
+
+	if (ctrlPressed)
+	{
+		if (IsKeyDown(KEY_S))
+		{
+			textDocument.SaveTextDocument(textBuffer);
+		}
+	}
 
 	if (IsKeyDown(keyRepeat.key))
 	{

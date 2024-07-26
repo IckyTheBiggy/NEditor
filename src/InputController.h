@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Cursor.h"
+#include "TextDocument.h"
 #include <cctype>
 #include <raylib.h>
 #include <string>
@@ -13,7 +14,6 @@ class InputController
 {
   private:
   public:
-	void HandleKeyPress(std::vector<std::string> &textBuffer, Cursor &cursor,
-	                    int key);
-	void HandleInput(std::vector<std::string> &textBufferm, Cursor &cursor);
+	void HandleKeyPress(std::vector<std::string> &textBuffer, Cursor &cursor, int key);
+	void HandleInput(std::vector<std::string> &textBuffer, Cursor &cursor, TextDocument &textDocument);
 };
