@@ -1,4 +1,3 @@
-
 name: ClangFormat Check
 
 on: [push, pull_request]
@@ -11,31 +10,54 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Fetch all history for all branches and tags
+          fetch-depth: 0
 
       - name: Install ClangFormat
         run: |
           sudo apt-get update
           sudo apt-get install -y clang-format
+          clang-format --version
+
       - name: Check ClangFormat
         run: |
           echo "Event name: ${{ github.event_name }}"
+          echo "Current SHA: ${{ github.sha }}"
           
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             echo "This is a pull request"
             base_commit=$(git merge-base ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
+            echo "Base commit: $base_commit"
             files=$(git diff --name-only $base_commit ${{ github.sha }} | grep -E '\.(cpp|h|c|cc|cxx|hpp)$' || true)
           else
             echo "This is a push"
+            echo "Previous commit: $(git rev-parse HEAD^)"
             files=$(git diff --name-only HEAD^ HEAD | grep -E '\.(cpp|h|c|cc|cxx|hpp)$' || true)
           fi
           
-          echo "Files to check:"
+          echo "C/C++ files to check:"
           echo "$files"
           
           if [ -n "$files" ]; then
-            echo "$files" | xargs clang-format -style=file -i
-            git diff --exit-code || (echo "Clang-format check failed. Please run clang-format locally and commit the changes." && exit 1)
+            for file in $files; do
+              echo "Checking $file"
+              clang-format --style=file -i "$file"
+              if git diff --exit-code "$file"; then
+                echo "$file is correctly formatted"
+              else
+                echo "$file has formatting issues"
+                git diff "$file"
+                exit 1
+              fi
+            done
           else
             echo "No C/C++ files to check."
+          fi
+
+      - name: Check for .clang-format file
+        run: |
+          if [ -f ".clang-format" ]; then
+            echo ".clang-format file exists"
+            cat .clang-format
+          else
+            echo ".clang-format file not found"
           fi
