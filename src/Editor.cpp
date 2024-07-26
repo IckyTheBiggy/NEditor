@@ -41,7 +41,9 @@ void Editor::Run()
 
 		inputController.HandleInput(textBuffer, cursor, textDocument);
 		cursor.UpdateBlink();
+
 		DrawTextBuffer(textBuffer, font);
+
 		cursor.Render();
 
 		EndDrawing();

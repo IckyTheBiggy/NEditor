@@ -30,6 +30,7 @@ class Cursor
 
 	int GetX() const;
 	int GetY() const;
+
 	void SetX(int newX);
 	void SetY(int newY);
 
@@ -41,6 +42,8 @@ class Cursor
 	float lerpPos;
 	float startX, prevX, currentX, targetX, deltaX;
 	float startY, prevY, currentY, targetY, deltaY;
+
+	int viewportStart;
 
 	int blinkInterval;
 	int blinkTimer;
