@@ -174,8 +174,8 @@ float Lerping::BackInOut(float t)
 	           ? (std::pow(2.0f * t, 2.0f) * ((c2 + 1.0f) * 2.0f * t - c2)) /
 	                 2.0f
 	           : (std::pow(2.0f * t - 2.0f, 2.0f) *
-	                  ((c2 + 1.0f) * (t * 2.0f - 2.0f) + c2) +
-	              2.0f) /
+	                     ((c2 + 1.0f) * (t * 2.0f - 2.0f) + c2) +
+	                 2.0f) /
 	                 2.0f;
 }
 
@@ -202,10 +202,10 @@ float Lerping::ElasticInOut(float t)
 	return t == 0.0f   ? 0.0f
 	       : t == 1.0f ? 1.0f
 	       : t < 0.5f  ? -(std::pow(2.0f, 20.0f * t - 10.0f) *
-                          std::sin((20.0f * t - 11.125f) * c5)) /
+                            std::sin((20.0f * t - 11.125f) * c5)) /
 	                        2.0f
 	                  : (std::pow(2.0f, -20.0f * t + 10.0f) *
-	                     std::sin((20.0f * t - 11.125f) * c5)) /
+	                        std::sin((20.0f * t - 11.125f) * c5)) /
 	                            2.0f +
 	                        1.0f;
 }

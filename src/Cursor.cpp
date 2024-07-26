@@ -2,8 +2,7 @@
 #include "Lerping.h"
 #include <raylib.h>
 
-Cursor::Cursor(int x, int y, int blinkInterval,
-               const std::vector<std::string> &textBuffer, const Font &font)
+Cursor::Cursor(int x, int y, int blinkInterval, const std::vector<std::string> &textBuffer, const Font &font)
     : textBuffer(textBuffer), font(font)
 {
 	this->x = x;
@@ -135,11 +134,11 @@ void Cursor::DrawCursor()
 
 	Vector2 tl = {(float)currentX + tlOffset.x, (float)currentY + tlOffset.y};
 	Vector2 tr = {(float)currentX + trOffset.x + w,
-	              (float)currentY + trOffset.y};
+	    (float)currentY + trOffset.y};
 	Vector2 br = {(float)currentX + brOffset.x + w,
-	              (float)currentY + brOffset.y + h};
+	    (float)currentY + brOffset.y + h};
 	Vector2 bl = {(float)currentX + blOffset.x,
-	              (float)currentY + blOffset.y + h};
+	    (float)currentY + blOffset.y + h};
 
 	DrawTriangle(tl, br, tr, RAYWHITE);
 	DrawTriangle(tl, bl, br, RAYWHITE);

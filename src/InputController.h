@@ -14,8 +14,6 @@ class InputController
 {
   private:
   public:
-	void HandleKeyPress(std::vector<std::string> &textBuffer, Cursor &cursor,
-	                    int key);
-	void HandleInput(std::vector<std::string> &textBuffer, Cursor &cursor,
-	                 TextDocument &textDocument);
+	void HandleKeyPress(std::vector<std::string> &textBuffer, Cursor &cursor, int key);
+	void HandleInput(std::vector<std::string> &textBuffer, Cursor &cursor, TextDocument &textDocument);
 };

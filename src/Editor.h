@@ -2,8 +2,8 @@
 
 #include "Config.h"
 #include "Cursor.h"
-#include "TextDocument.h"
 #include "InputController.h"
+#include "TextDocument.h"
 #include "toml.hpp"
 #include <raylib.h>
 #include <string>

@@ -3,3 +3,10 @@ BreakBeforeBraces: Allman
 IndentWidth: 4
 TabWidth: 4
 UseTab: ForIndentation
+BinPackArguments: false
+BinPackParameters: false
+AllowAllArgumentsOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false
+ColumnLimit: 0
+ExperimentalAutoDetectBinPacking: false
+AlignAfterOpenBracket: DontAlign

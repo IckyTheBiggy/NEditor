@@ -10,9 +10,7 @@ void DrawTextBuffer(std::vector<std::string> textBuffer, const Font &font)
 {
 	for (int i = 0; i < textBuffer.size(); i++)
 	{
-		DrawText(textBuffer[i].c_str(), TEXT_PADDING,
-		         TEXT_PADDING + i * (font.baseSize + font.baseSize / 2),
-		         font.baseSize, RAYWHITE);
+		DrawText(textBuffer[i].c_str(), TEXT_PADDING, TEXT_PADDING + i * (font.baseSize + font.baseSize / 2), font.baseSize, RAYWHITE);
 	}
 }
 
