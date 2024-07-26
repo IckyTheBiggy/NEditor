@@ -26,45 +26,44 @@ jobs:
           else
             echo ".clang-format file not found"
             exit 1
+
+      - name: Check ClangFormat
+        run: |
+          echo "Contents of .clang-format:"
+          cat .clang-format
+          echo "Current directory:"
+          pwd
+          echo "Files in current directory:"
+          ls -la
+
+          echo "Event name: ${{ github.event_name }}"
+          echo "Current SHA: ${{ github.sha }}"
+          
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "This is a pull request"
+            base_commit=$(git merge-base ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
+            echo "Base commit: $base_commit"
+            files=$(git diff --name-only $base_commit ${{ github.sha }} | grep -E '\.(cpp|h|c|cc|cxx|hpp)$' || true)
+          else
+            echo "This is a push"
+            echo "Previous commit: $(git rev-parse HEAD^)"
+            files=$(git diff --name-only HEAD^ HEAD | grep -E '\.(cpp|h|c|cc|cxx|hpp)$' || true)
           fi
-
-- name: Check ClangFormat
-  run: |
-    echo "Contents of .clang-format:"
-    cat .clang-format
-    echo "Current directory:"
-    pwd
-    echo "Files in current directory:"
-    ls -la
-
-    echo "Event name: ${{ github.event_name }}"
-    echo "Current SHA: ${{ github.sha }}"
-    
-    if [ "${{ github.event_name }}" = "pull_request" ]; then
-      echo "This is a pull request"
-      base_commit=$(git merge-base ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
-      echo "Base commit: $base_commit"
-      files=$(git diff --name-only $base_commit ${{ github.sha }} | grep -E '\.(cpp|h|c|cc|cxx|hpp)$' || true)
-    else
-      echo "This is a push"
-      echo "Previous commit: $(git rev-parse HEAD^)"
-      files=$(git diff --name-only HEAD^ HEAD | grep -E '\.(cpp|h|c|cc|cxx|hpp)$' || true)
-    fi
-    
-    echo "C/C++ files to check:"
-    echo "$files"
-    
-    if [ -n "$files" ]; then
-      for file in $files; do
-        echo "Checking $file"
-        if ! clang-format --style=file:.clang-format --dry-run -Werror --verbose "$file"; then
-          echo "$file has formatting issues"
-          clang-format --style=file:.clang-format "$file" | diff -u "$file" -
-          exit 1
-        else
-          echo "$file is correctly formatted"
-        fi
-      done
-    else
-      echo "No C/C++ files to check."
-    fi
+          
+          echo "C/C++ files to check:"
+          echo "$files"
+          
+          if [ -n "$files" ]; then
+            for file in $files; do
+              echo "Checking $file"
+              if ! clang-format --style=file:.clang-format --dry-run -Werror --verbose "$file"; then
+                echo "$file has formatting issues"
+                clang-format --style=file:.clang-format "$file" | diff -u "$file" -
+                exit 1
+              else
+                echo "$file is correctly formatted"
+              fi
+            done
+          else
+            echo "No C/C++ files to check."
+          fi
