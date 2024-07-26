@@ -1,0 +1,41 @@
+
+name: ClangFormat Check
+
+on: [push, pull_request]
+
+jobs:
+  clang-format:
+    name: Run ClangFormat
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history for all branches and tags
+
+      - name: Install ClangFormat
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-format
+      - name: Check ClangFormat
+        run: |
+          echo "Event name: ${{ github.event_name }}"
+          
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "This is a pull request"
+            base_commit=$(git merge-base ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
+            files=$(git diff --name-only $base_commit ${{ github.sha }} | grep -E '\.(cpp|h|c|cc|cxx|hpp)$' || true)
+          else
+            echo "This is a push"
+            files=$(git diff --name-only HEAD^ HEAD | grep -E '\.(cpp|h|c|cc|cxx|hpp)$' || true)
+          fi
+          
+          echo "Files to check:"
+          echo "$files"
+          
+          if [ -n "$files" ]; then
+            echo "$files" | xargs clang-format -style=file -i
+            git diff --exit-code || (echo "Clang-format check failed. Please run clang-format locally and commit the changes." && exit 1)
+          else
+            echo "No C/C++ files to check."
+          fi

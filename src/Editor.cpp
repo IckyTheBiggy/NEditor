@@ -18,7 +18,9 @@ void Editor::Run()
     SetConfigFlags(FLAG_WINDOW_TRANSPARENT);
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Window");
 
-    SetTargetFPS(120);
+    Config Config;
+
+    SetTargetFPS(Config.GetInt("fps", 120));
 
     Font font = GetFontDefault();
     font.baseSize = 20;

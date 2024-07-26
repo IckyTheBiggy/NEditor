@@ -1,9 +1,9 @@
 #pragma once
 
 #include <raylib.h>
-#include <iostream>
 #include <string>
 #include <vector>
+#include <cctype>
 #include "Cursor.h"
 
 const float KEY_REPEAT_DELAY = 0.5f;
