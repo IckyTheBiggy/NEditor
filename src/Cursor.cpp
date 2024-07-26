@@ -20,7 +20,7 @@ Cursor::Cursor(int x, int y, int blinkInterval, const std::vector<std::string>& 
 
 void Cursor::Render()
 {
-    float t = Lerping::LerpPos(lerpPos, GetFrameTime() / 0.25f, Easing::CubicOut);
+    float t = Lerping::LerpPos(lerpPos, GetFrameTime() / 0.1f, Easing::CubicOut);
     prevX = currentX;
     prevY = currentY;
     currentX = Lerping::Lerp(startX, targetX, t);
@@ -112,8 +112,12 @@ void Cursor::DrawCursor() {
     int w = CURSOR_WIDTH;
     int h = font.baseSize;
     
-    float xOffset = -deltaX * 10;
-    float yOffset = deltaY * 10;
+    float offsetStrength = 0.25f;
+    float offsetPower = 2;
+    float scaledOffsetStrength = offsetStrength / sqrt(offsetPower);
+
+    float xOffset = -pow(deltaX, offsetPower) * scaledOffsetStrength;
+    float yOffset = pow(deltaY, offsetPower) * scaledOffsetStrength;
 
     float rightOffset = xOffset > 0 ? xOffset : 0;
     float leftOffset = xOffset < 0 ? xOffset : 0;
@@ -130,6 +134,6 @@ void Cursor::DrawCursor() {
     Vector2 br = { (float)currentX + brOffset.x + w, (float)currentY + brOffset.y + h };
     Vector2 bl = { (float)currentX + blOffset.x, (float)currentY + blOffset.y + h };
 
-    DrawTriangleLines(tl, tr, br, RAYWHITE);
-    DrawTriangleLines(br, bl, tl, RAYWHITE);
+    DrawTriangle(tl, br, tr, RAYWHITE);
+    DrawTriangle(tl, bl, br, RAYWHITE);
 }
