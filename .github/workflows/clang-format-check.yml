@@ -26,6 +26,7 @@ jobs:
           else
             echo ".clang-format file not found"
             exit 1
+          fi
 
       - name: Check ClangFormat
         run: |
