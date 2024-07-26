@@ -72,7 +72,7 @@ void InputController::HandleKeyPress(std::vector<std::string> &textBuffer,
 		int x = cursor.GetX();
 		int y = cursor.GetY();
 
-		std::string& currentLine = textBuffer[y];
+		std::string &currentLine = textBuffer[y];
 
 		std::string remainingText = currentLine.substr(x);
 		currentLine.erase(x);
