@@ -8,8 +8,12 @@
 class TextDocument
 {
   public:
-	bool OpenTextDocument(const std::string &fileName, std::vector<std::string> &buffer);
-	bool SaveTextDocument(const std::string &fileName, std::vector<std::string> &buffer);
+
+    TextDocument(std::string filePath);
+
+	bool OpenTextDocument(std::vector<std::string> &textBuffer);
+	bool SaveTextDocument(std::vector<std::string> &textBuffer);
 
   private:
+    std::string filePath;
 };

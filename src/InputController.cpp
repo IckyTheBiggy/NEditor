@@ -158,8 +158,7 @@ void InputController::HandleKeyPress(std::vector<std::string> &textBuffer,
 	}
 }
 
-void InputController::HandleInput(std::vector<std::string> &textBuffer,
-                                  Cursor &cursor)
+void InputController::HandleInput(std::vector<std::string> &textBuffer, Cursor &cursor, TextDocument &textDocument)
 {
 	int key = GetCharPressed();
 
@@ -197,6 +196,14 @@ void InputController::HandleInput(std::vector<std::string> &textBuffer,
 		shiftPressed = true;
 	else if (IsKeyReleased(KEY_LEFT_SHIFT))
 		shiftPressed = false;
+
+	if (ctrlPressed)
+	{
+		if (IsKeyDown(KEY_S))
+		{
+			textDocument.SaveTextDocument(textBuffer);
+		}
+	}
 
 	if (IsKeyDown(keyRepeat.key))
 	{

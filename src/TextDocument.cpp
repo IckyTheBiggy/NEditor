@@ -1,38 +1,43 @@
 #include "TextDocument.h"
 
-bool TextDocument::OpenTextDocument(const std::string &fileName, std::vector<std::string> &buffer)
+TextDocument::TextDocument(std::string filePath)
 {
-	std::ifstream file(fileName);
+    this->filePath = filePath;
+}
+
+bool TextDocument::OpenTextDocument(std::vector<std::string> &textBuffer)
+{
+	std::ifstream file(filePath);
 
 	if (!file.is_open())
 	{
-		std::cerr << "Error opening .txt file: " << fileName << std::endl;
+		std::cerr << "Error opening .txt file: " << filePath << std::endl;
 		return false;
 	}
 
 	std::string line;
-	buffer.clear();
+	textBuffer.clear();
 
 	while (std::getline(file, line))
 	{
-		buffer.push_back(line);
+		textBuffer.push_back(line);
 	}
 
 	file.close();
 	return true;
 }
 
-bool TextDocument::SaveTextDocument(const std::string &fileName, std::vector<std::string> &buffer)
+bool TextDocument::SaveTextDocument(std::vector<std::string> &textBuffer)
 {
-	std::ofstream file(fileName);
+	std::ofstream file(filePath);
 
 	if (!file.is_open())
 	{
-		std::cerr << "Error saving .txt file: " << fileName << std::endl;
+		std::cerr << "Error saving .txt file: " << filePath << std::endl;
 		return false;
 	}
 
-	for (const auto &line : buffer)
+	for (const auto &line : textBuffer)
 	{
 		file << line << '\n';
 	}
