@@ -15,6 +15,9 @@ class Editor
 	void Run();
 	void UpdateScroll(const Cursor &Cursor, const Font &font);
 
+  int GetWindowWidth() const;
+  int GetWindowHeight() const;
+
   private:
     int scrollOffset = 0;
 };
