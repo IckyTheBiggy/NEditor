@@ -8,6 +8,7 @@ find_package(raylib REQUIRED)
 
 add_executable(SmoothEditor
     src/main.cpp
+    src/Editor.cpp
 )
 
 target_include_directories(SmoothEditor PRIVATE ${raylib_INCLUDE_DIRS})
