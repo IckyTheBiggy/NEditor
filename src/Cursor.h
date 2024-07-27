@@ -25,6 +25,7 @@ class Cursor
 	void MoveDown();
 
 	void Render();
+	void UpdatePos();
 	void UpdateBlink();
 	void ResetBlink();
 
@@ -33,6 +34,8 @@ class Cursor
 
 	void SetX(int newX);
 	void SetY(int newY);
+
+	void SetScrollOffset(int newOffset);
 
 	void SetTextBuffer(std::vector<std::string> &textBuffer);
 
@@ -43,7 +46,7 @@ class Cursor
 	float startX, prevX, currentX, targetX, deltaX;
 	float startY, prevY, currentY, targetY, deltaY;
 
-	int viewportStart;
+	int scrollOffset = 0;
 
 	int blinkInterval;
 	int blinkTimer;
@@ -52,6 +55,5 @@ class Cursor
 	const std::vector<std::string> &textBuffer;
 	const Font &font;
 
-	void UpdatePos();
 	void DrawCursor();
 };
