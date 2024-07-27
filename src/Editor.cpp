@@ -7,7 +7,7 @@ const std::string textFilePath = "../test.txt";
 std::vector<std::string> textBuffer;
 
 void DrawTextBuffer(std::vector<std::string> textBuffer,
-    const Font &font,
+    const Font font,
     int scrollOffset)
 {
 	int windowHeight = GetScreenHeight();
@@ -27,14 +27,14 @@ void DrawTextBuffer(std::vector<std::string> textBuffer,
 	}
 }
 
-void Editor::UpdateScroll(const Cursor &cursor, const Font &font)
+void Editor::UpdateScroll(const Cursor cursor, const Font font)
 {
 	int lineHeight = font.baseSize + font.baseSize / 2;
 	int cursorY = cursor.GetY() * lineHeight;
 	int viewportHeight = SCREEN_HEIGHT - 2 * TEXT_PADDING;
 
 	float upperThresholdRatio = 0.2f;
-	float lowerThresholdRation = 0.8f;
+	float lowerThresholdRation = 1.4f;
 
 	int upperThreshold = static_cast<int>(viewportHeight * upperThresholdRatio);
 	int lowerThreshold =
@@ -69,10 +69,9 @@ void Editor::Run()
 	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Window");
 
-	Config Config;
 	TextDocument textDocument(textFilePath);
 
-	SetTargetFPS(Config.GetInt("fps", 120));
+	SetTargetFPS(120);
 	textDocument.OpenTextDocument(textBuffer);
 
 	Font font = GetFontDefault();

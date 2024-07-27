@@ -12,7 +12,6 @@ add_executable(SmoothEditor
     src/Editor.cpp
     src/InputController.cpp
     src/Lerping.cpp
-    src/Config.cpp
     src/TextDocument.cpp
 )
 
