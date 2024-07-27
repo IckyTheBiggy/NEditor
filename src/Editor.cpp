@@ -6,12 +6,15 @@ const int SCREEN_HEIGHT = 600;
 const std::string textFilePath = "../test.txt";
 std::vector<std::string> textBuffer;
 
-void DrawTextBuffer(std::vector<std::string> textBuffer, const Font &font, int scrollOffset)
-{	
+void DrawTextBuffer(std::vector<std::string> textBuffer,
+    const Font &font,
+    int scrollOffset)
+{
 	int windowHeight = GetScreenHeight();
 	for (int i = 0; i < textBuffer.size(); i++)
 	{
-		int y = TEXT_PADDING + i * (font.baseSize + font.baseSize / 2) - scrollOffset;
+		int y = TEXT_PADDING + i * (font.baseSize + font.baseSize / 2) -
+		        scrollOffset;
 
 		if (y >= -font.baseSize && y < windowHeight)
 		{
@@ -24,7 +27,7 @@ void DrawTextBuffer(std::vector<std::string> textBuffer, const Font &font, int s
 	}
 }
 
-void Editor::UpdateScroll(const Cursor& cursor, const Font &font)
+void Editor::UpdateScroll(const Cursor &cursor, const Font &font)
 {
 	int lineHeight = font.baseSize + font.baseSize / 2;
 	int cursorY = cursor.GetY() * lineHeight;
@@ -34,7 +37,8 @@ void Editor::UpdateScroll(const Cursor& cursor, const Font &font)
 	float lowerThresholdRation = 0.8f;
 
 	int upperThreshold = static_cast<int>(viewportHeight * upperThresholdRatio);
-	int lowerThreshold = static_cast<int>(viewportHeight * lowerThresholdRation);
+	int lowerThreshold =
+	    static_cast<int>(viewportHeight * lowerThresholdRation);
 
 	int cursorScreenY = cursorY - scrollOffset;
 
@@ -55,15 +59,9 @@ void Editor::UpdateScroll(const Cursor& cursor, const Font &font)
 	scrollOffset = std::min(scrollOffset, maxScroll);
 }
 
-int Editor::GetWindowWidth() const
-{
-	return GetScreenWidth();
-}
+int Editor::GetWindowWidth() const { return GetScreenWidth(); }
 
-int Editor::GetWindowHeight() const
-{
-	return GetScreenHeight();
-}
+int Editor::GetWindowHeight() const { return GetScreenHeight(); }
 
 void Editor::Run()
 {

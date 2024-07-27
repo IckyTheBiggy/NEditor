@@ -85,10 +85,7 @@ void Cursor::SetY(int newY)
 	UpdatePos();
 }
 
-void Cursor::SetScrollOffset(int newOffset)
-{
-	scrollOffset = newOffset;
-}
+void Cursor::SetScrollOffset(int newOffset) { scrollOffset = newOffset; }
 
 void Cursor::UpdatePos()
 {
@@ -100,7 +97,8 @@ void Cursor::UpdatePos()
 	targetX =
 	    TEXT_PADDING + 1 +
 	    (x > 0 ? MeasureText(line.substr(0, x).c_str(), font.baseSize) : 0);
-	targetY = TEXT_PADDING + y * (font.baseSize + (float)font.baseSize / 2) - scrollOffset;
+	targetY = TEXT_PADDING + y * (font.baseSize + (float)font.baseSize / 2) -
+	          scrollOffset;
 
 	lerpPos = 0;
 	ResetBlink();
