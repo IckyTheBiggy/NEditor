@@ -13,6 +13,8 @@ class Editor
 {
   public:
 	void Run();
+	void UpdateScroll(const Cursor &Cursor, const Font &font);
 
   private:
+    int scrollOffset = 0;
 };

@@ -6,16 +6,39 @@ const int SCREEN_HEIGHT = 600;
 const std::string textFilePath = "../test.txt";
 std::vector<std::string> textBuffer;
 
-void DrawTextBuffer(std::vector<std::string> textBuffer, const Font &font)
+void DrawTextBuffer(std::vector<std::string> textBuffer, const Font &font, int scrollOffset)
 {
 	for (int i = 0; i < textBuffer.size(); i++)
 	{
-		DrawText(textBuffer[i].c_str(),
-		    TEXT_PADDING,
-		    TEXT_PADDING + i * (font.baseSize + font.baseSize / 2),
-		    font.baseSize,
-		    RAYWHITE);
+		int y = TEXT_PADDING + i * (font.baseSize + font.baseSize / 2) - scrollOffset;
+
+		if (y >= -font.baseSize && y < SCREEN_HEIGHT)
+		{
+			DrawText(textBuffer[i].c_str(),
+			    TEXT_PADDING,
+			    y,
+			    font.baseSize,
+			    RAYWHITE);
+		}
 	}
+}
+
+void Editor::UpdateScroll(const Cursor& cursor, const Font &font)
+{
+	int cursorY = cursor.GetY() * (font.baseSize + font.baseSize / 2);
+	int viewportHeight = SCREEN_HEIGHT - 2 * TEXT_PADDING;
+
+	if (cursorY - scrollOffset > viewportHeight)
+	{
+		scrollOffset = cursorY - viewportHeight;
+	}
+
+	else if (cursorY - scrollOffset < TEXT_PADDING)
+	{
+		scrollOffset = cursorY - TEXT_PADDING;
+	}
+
+	scrollOffset = std::max(0, scrollOffset);
 }
 
 void Editor::Run()
@@ -42,7 +65,11 @@ void Editor::Run()
 		inputController.HandleInput(textBuffer, cursor, textDocument);
 		cursor.UpdateBlink();
 
-		DrawTextBuffer(textBuffer, font);
+		UpdateScroll(cursor, font);
+		cursor.SetScrollOffset(scrollOffset);
+		cursor.UpdatePos();
+
+		DrawTextBuffer(textBuffer, font, scrollOffset);
 
 		cursor.Render();
 
